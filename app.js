@@ -6,11 +6,11 @@ var app = express();
 app.use(bodyParser.json());
 
 var connection = sql.createConnection({
-    host: 'localhost',
+    host: 'us-cdbr-iron-east-03.cleardb.net',
     port: '3306',
-    user: 'root',
-    password: 'i1g9o9r7',
-    database: 'ivor_db'
+    user: 'bf2f73eeeafeec',
+    password: '7eeac762',
+    database: 'heroku_ec366bbe5402271'
 });
 
 connection.connect(function (error) {
@@ -393,7 +393,13 @@ function selectionCommunication() {
     });
 }
 
-app.listen(1234);
+
+let port = process.env.PORT;
+if (port == null || port == "") {
+    port = 8000;
+}
+app.listen(port);
+console.log('Listen port ' + port);
 configureGET();
 configureInsert();
 configureUpdate();
