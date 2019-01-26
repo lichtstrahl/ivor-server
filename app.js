@@ -5,21 +5,29 @@ var app = express();
 
 app.use(bodyParser.json());
 
-var connection = sql.createConnection({
+var mysqlConfig = {
     host: 'us-cdbr-iron-east-03.cleardb.net',
     port: '3306',
     user: 'bf2f73eeeafeec',
     password: '7eeac762',
     database: 'heroku_ec366bbe5402271'
-});
+};
+var connection;
 
-connection.connect(function (error) {
-    if (!!error) {
-        console.log('error connection to DB');
-    } else {
-        console.log('Connected to DB');
-    }
-});
+function handleDisconnect() {
+    connection = sql.createConnection(mysqlConfig);
+
+    connection.on('error', function(err) {
+        console.log('db error', err);
+        if(err.code === 'PROTOCOL_CONNECTION_LOST') { // Connection to the MySQL server is usually
+            handleDisconnect();                         // lost due to either server restart, or a
+        } else {                                      // connnection idle timeout (the wait_timeout
+            throw err;                                  // server variable configures this)
+        }
+    });
+}
+
+handleDisconnect();
 
 function configureGET() {
     app.get('/', function (req, res) {
