@@ -1,9 +1,11 @@
 var express =require('express');
 var sql = require('mysql');
 var bodyParser = require('body-parser');
+var cors = require('cors');
 var app = express();
 
 app.use(bodyParser.json());
+app.use(cors());
 
 var mysqlConfig = {
     host: 'us-cdbr-iron-east-03.cleardb.net',
